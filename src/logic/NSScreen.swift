@@ -85,7 +85,7 @@ extension NSScreen {
     func repositionPanel(_ window: NSWindow) {
         let screenFrame = visibleFrame
         let panelFrame = window.frame
-        let x = screenFrame.minX + max(screenFrame.width - panelFrame.width, 0) * 0.5
+        let x = screenFrame.minX
         let y = screenFrame.minY + max(screenFrame.height - panelFrame.height, 0) * 0.5
         window.setFrameOrigin(NSPoint(x: x, y: y))
     }
