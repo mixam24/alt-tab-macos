@@ -131,7 +131,7 @@ class Appearance {
         cellCornerRadius = 10
         windowCornerRadius = 23
         edgeInsetsSize = 7
-        maxWidthOnScreen = isHorizontalScreen ? 0.6 : 0.8
+        maxWidthOnScreen = 0.3
         windowMinWidthInRow = 0.6
         windowMaxWidthInRow = 0.9
         rowsCount = 1
