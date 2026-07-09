@@ -406,6 +406,12 @@ class App: AppCenterApplication {
         SleepWakeEvents.observe()
         Applications.initialDiscovery()
         KeyboardEvents.addEventHandlers()
+        // Evaluate the "ignore shortcuts" exception for whatever app is already frontmost at launch (#5842):
+        // no didActivateApplication fires for it, so without this an app blacklisted with ignore=.always keeps
+        // AltTab's shortcut registered after an auto-update relaunch until the user switches away and back.
+        if let frontmostPid = Applications.frontmostPid, let frontmostApp = Applications.findOrCreate(frontmostPid, false) {
+            checkIfShortcutsShouldBeDisabled(frontmostApp.focusedWindow, frontmostApp)
+        }
         CursorEvents.observe()
         TrackpadEvents.observe()
         CliEvents.observe()
