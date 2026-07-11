@@ -39,7 +39,7 @@ class Preferences {
             "updatePolicy": UpdatePolicyPreference.autoCheck.indexAsString,
             "crashPolicy": CrashPolicyPreference.ask.indexAsString,
             "hideThumbnails": "false",
-            "hideSpaceNumberLabels": "false",
+            "hideSpaceNumberLabels": "true",
             "hideStatusIcons": "false",
             "previewFocusedWindow": "false",
             "captureWindowsInBackground": "true",
