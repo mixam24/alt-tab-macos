@@ -334,6 +334,12 @@ class Preferences {
         return CachedUserDefaults.bool(indexToName("previewFocusedWindowOverride", index))
     }
 
+    /// captures aren't tied to a specific shortcut, so anything sized or routed for Preview
+    /// must consider every slot's effective setting
+    static var anyShortcutUsesPreview: Bool {
+        (0...maxShortcutCount).contains { effectivePreviewSelectedWindow($0) }
+    }
+
     /// Which Screen-Recording-dependent features any shortcut's effective settings rely on: the
     /// Thumbnails appearance style (window screenshots) and/or the "preview selected window" overlay.
     /// These are the only features needing the permission, so when none are configured the menubar
