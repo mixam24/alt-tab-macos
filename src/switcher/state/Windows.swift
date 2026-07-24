@@ -281,8 +281,13 @@ class Windows {
         }
         guard let index else { return }
         TilesView.highlight(index)
-        let focusedView = TilesView.recycledViews[index]
-        TilesView.scrollView.contentView.scrollToVisible(focusedView.frame)
+        // keyboard/programmatic selection scrolls the target into view; mouse hover must NOT, or hovering a
+        // partially-clipped edge tile yanks the whole list — the accidental "edge scroll". Mouse users scroll
+        // with the wheel/trackpad instead.
+        if !fromMouse {
+            let focusedView = TilesView.recycledViews[index]
+            TilesView.scrollView.contentView.scrollToVisible(focusedView.frame)
+        }
         voiceOverWindow(index)
     }
 
