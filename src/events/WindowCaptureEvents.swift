@@ -28,12 +28,7 @@ class WindowCaptureScreenshots {
         var requests = [CGWindowID: CaptureRequest]()
         for window in windowsToScreenshot {
             guard let wid = window.cgWindowId, let size = window.size else { continue }
-            let scaleFactor: CGFloat
-            if let screenId = window.screenId, let screen = Screens.all[screenId] {
-                scaleFactor = screen.backingScaleFactor
-            } else {
-                scaleFactor = NSScreen.preferred.backingScaleFactor
-            }
+            let scaleFactor = WindowThumbnails.captureScaleFactor(window)
             requests[wid] = CaptureRequest(window: window, size: size, scaleFactor: scaleFactor,
                 isFullscreen: window.isFullscreen, fullRes: fullRes)
         }
@@ -157,6 +152,9 @@ class WindowCaptureScreenshots {
                 // full-res Preview frames go to the session's capped cache, not Window.thumbnail, so they
                 // are released when the session ends; swap the sharp frame in if it's the one being previewed
                 guard let session = SwitcherSession.current, let wid = window.cgWindowId else { return }
+                // a mid-animation frame is refused here too; leaving the cache empty makes the next selection
+                // move re-fetch it, and the thumbnail stands in as the Preview's placeholder meanwhile
+                guard !WindowThumbnails.isPartialFrame(window, contents, fullRes: true) else { return }
                 session.storePreviewFrame(wid, contents)
                 if let position = window.position, let size = window.size {
                     PreviewPanel.updateIfShowing(wid, contents, position, size)
@@ -350,23 +348,9 @@ extension SCStreamConfiguration {
     }
 
     private func setWindowSize(_ size: CGSize, _ scaleFactor: CGFloat, _ fullRes: Bool) {
-        // window.size is the logical size and doesn't change with scaleFactor. We need to correct for this as we need to capture more or less pixels depending on DPI.
-        let originalSize = NSSize(width: size.width * scaleFactor, height: size.height * scaleFactor)
-        guard originalSize.width > 0, originalSize.height > 0 else { return }
-        // Full resolution only for windows the Preview panel may imminently show (the selected window and
-        // its cycling neighbors, decided by the caller). Capturing every window full-res floods the system
-        // capture path and can wedge screenshots machine-wide (#5861).
-        if fullRes {
-            width = Int(originalSize.width)
-            height = Int(originalSize.height)
-        } else {
-            // capture screenshots as small as needed for the thumbnails
-            let maxSize = TilesPanel.maxPossibleThumbnailSize
-            guard maxSize.width > 0, maxSize.height > 0 else { return }
-            let scale = min(1.0, maxSize.width / originalSize.width, maxSize.height / originalSize.height)
-            width = Int((originalSize.width * scale).rounded())
-            height = Int((originalSize.height * scale).rounded())
-        }
+        guard let pixels = WindowThumbnails.capturePixelSize(size, scaleFactor, fullRes) else { return }
+        width = Int(pixels.width)
+        height = Int(pixels.height)
     }
 }
 

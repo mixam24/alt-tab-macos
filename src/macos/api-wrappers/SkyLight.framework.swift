@@ -287,13 +287,16 @@ func SLSRegisterConnectionNotifyProc(_ cid: CGSConnectionID, _ proc: CGSConnecti
 @_silgen_name("SLSConnectionDispatchNotificationsToMainQueueIfNotMainThread") @discardableResult
 func SLSConnectionDispatchNotificationsToMainQueueIfNotMainThread(_ cid: CGSConnectionID) -> CGError
 
-/// opt this connection into per-window notifications for the given windows (yabai's mechanism). macOS 10.10+
+/// opt this connection into per-window notifications for the given windows (yabai's mechanism). macOS 10.10+.
+/// REPLACES this connection's watch list — it does not add to it. Always pass every wid you still want to
+/// hear from; passing only the new ones silences all the others (measured on macOS 26.5: a QA run that sent
+/// deltas saw 0 order-outs, 0 destroys and 0 focus events instead of 91 / 143 / 51, while the
+/// connection-wide creates and moves kept arriving, so nothing looked broken until windows stopped being
+/// removed). There is also no explicit way back: SkyLight exports no `SLSRemoveNotificationsForWindows` /
+/// `SLSStopNotificationsForWindows` (dlsym'd on macOS 26), so dropping a wid from the next call is the only
+/// unsubscribe there is.
 @_silgen_name("SLSRequestNotificationsForWindows") @discardableResult
 func SLSRequestNotificationsForWindows(_ cid: CGSConnectionID, _ windowList: UnsafeMutablePointer<CGWindowID>, _ windowCount: Int32) -> CGError
-
-/// fill `list` with the on-screen (current-Space) window ids, top-most first. `owner` 0 = all. macOS 10.10+
-@_silgen_name("SLSGetOnScreenWindowList") @discardableResult
-func SLSGetOnScreenWindowList(_ cid: CGSConnectionID, _ owner: CGSConnectionID, _ count: Int32, _ list: UnsafeMutablePointer<CGWindowID>, _ outCount: UnsafeMutablePointer<Int32>) -> CGError
 
 // MARK: - WindowServer window query (batched snapshot — see windowserver/WindowServerQuery.swift)
 //
@@ -324,6 +327,12 @@ func SLSWindowIteratorGetLevel(_ iterator: CFTypeRef) -> Int32
 
 @_silgen_name("SLSWindowIteratorGetSpaceTypeMask")
 func SLSWindowIteratorGetSpaceTypeMask(_ iterator: CFTypeRef) -> UInt64
+
+/// A SECOND bitfield alongside `GetAttributes`, and the one that carries minimized / app-hidden /
+/// fullscreen. Decoded by `WsWindowState`; see `WsWindowStateSpecs.md` for the mapped bits and the state
+/// matrix that proves each one specific.
+@_silgen_name("SLSWindowIteratorGetTags")
+func SLSWindowIteratorGetTags(_ iterator: CFTypeRef) -> UInt64
 
 // returns the window frame in top-left-origin global coordinates — same system as kAXPosition/kAXSize and
 // kCGWindowBounds (verified equal to both on macOS 26).
