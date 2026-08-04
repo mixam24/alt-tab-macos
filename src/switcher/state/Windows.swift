@@ -85,6 +85,15 @@ class Windows {
         // one-frame staleness (e.g. a window just dragged to another Space) self-corrects via the deferred
         // reconcile. `isPhantom` is DERIVED at read (pure, no IPC — cached `spaceIds` + the CGS latch), so
         // there is nothing to recompute here.
+        // ...with ONE exception: a summon can land inside a Space transition, before the leading-edge
+        // re-read (`WindowEventReducer.spaceTransitionStarted`) ran, or in the gap where it ran but CGS was
+        // still answering with the Space we are leaving. Filtering and sorting against that Space is the
+        // whole of #5864, and the topology is one CGS round-trip — 0.1ms p50, measured, against a ~110ms
+        // show — so re-read it rather than render a frame we know may be wrong. Only the topology: the
+        // per-window membership fan-out is the expensive part #5721 moved off this path and it stays off.
+        if WindowServerEvents.inSpaceTransition {
+            Spaces.refresh()
+        }
         // Per-shortcut prefs and `exceptions` don't change for the duration of one show, but each
         // computed-property access rebuilds the underlying array via N×`CachedUserDefaults.macroPref`
         // calls. Snapshot them once and pass into the per-window helper.
@@ -200,7 +209,11 @@ class Windows {
             let ax = w.axUiElement.map { String(CFHash($0) % 100000) } ?? "-"
             return "\(i == selected ? "*" : "")\(shouldDisplay(w) ? "+" : "-")\(i):\(app)#\(w.cgWindowId ?? 0)ax\(ax)\(flags.isEmpty ? "" : "(\(flags))")\(frame)sp\(w.spaceIds)"
         }
-        Logger.debug { "show[\(context)] sel=\(selected) tiles=\(tiles.joined(separator: " "))" }
+        // `space=` is the Space the tiles below were filtered and sorted AGAINST, at the instant of this
+        // render. Without it a capture cannot tell a wrong list from a right list judged against the Space
+        // the user had just left, which is the whole of #5864 and what the QA Space tests assert on.
+        Logger.debug { "show[\(context)] sel=\(selected) space=\(Spaces.currentSpaceId) "
+            + "tiles=\(tiles.joined(separator: " "))" }
     }
 
     static func selectedWindow() -> Window? {

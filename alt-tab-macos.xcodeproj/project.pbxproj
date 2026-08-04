@@ -71,6 +71,7 @@
 		5F5849A900000000000000A3 /* BruteForceWindowMatch.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5849A900000000000000A1 /* BruteForceWindowMatch.swift */; };
 		5F5849A900000000000000B2 /* BruteForceWindowMatchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5849A900000000000000B1 /* BruteForceWindowMatchTests.swift */; };
 		5F5849B000000000000000B2 /* WindowEventReducerPhantomTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5849B000000000000000B1 /* WindowEventReducerPhantomTests.swift */; };
+		5F5849B000000000000000C2 /* WindowEventReducerSpaceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5849B000000000000000C1 /* WindowEventReducerSpaceTests.swift */; };
 		5F5849B100000000000000B2 /* WindowEventReducerFocusTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5849B100000000000000B1 /* WindowEventReducerFocusTests.swift */; };
 		5F5849B100000000000000C2 /* WindowEventReducerMinimizeTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F5849B100000000000000C1 /* WindowEventReducerMinimizeTests.swift */; };
 		5E5EA12E0000000000000002 /* KeyRepeatTimerTestable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5E5EA12E0000000000000001 /* KeyRepeatTimerTestable.swift */; };
@@ -460,6 +461,7 @@
 		5F5849A900000000000000A1 /* BruteForceWindowMatch.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BruteForceWindowMatch.swift; sourceTree = "<group>"; };
 		5F5849A900000000000000B1 /* BruteForceWindowMatchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BruteForceWindowMatchTests.swift; sourceTree = "<group>"; };
 		5F5849B000000000000000B1 /* WindowEventReducerPhantomTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowEventReducerPhantomTests.swift; sourceTree = "<group>"; };
+		5F5849B000000000000000C1 /* WindowEventReducerSpaceTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowEventReducerSpaceTests.swift; sourceTree = "<group>"; };
 		5F5849B100000000000000B1 /* WindowEventReducerFocusTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowEventReducerFocusTests.swift; sourceTree = "<group>"; };
 		5F5849B100000000000000C1 /* WindowEventReducerMinimizeTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowEventReducerMinimizeTests.swift; sourceTree = "<group>"; };
 		5E5EA12E0000000000000001 /* KeyRepeatTimerTestable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyRepeatTimerTestable.swift; sourceTree = "<group>"; };
@@ -1058,6 +1060,7 @@
 				5F5849A900000000000000A1 /* BruteForceWindowMatch.swift */,
 				5F5849A900000000000000B1 /* BruteForceWindowMatchTests.swift */,
 				5F5849B000000000000000B1 /* WindowEventReducerPhantomTests.swift */,
+				5F5849B000000000000000C1 /* WindowEventReducerSpaceTests.swift */,
 				5F5849B100000000000000B1 /* WindowEventReducerFocusTests.swift */,
 				5F5849B100000000000000C1 /* WindowEventReducerMinimizeTests.swift */,
 				5F117E40000000000000F101 /* WindowFilterResolverTests.swift */,
@@ -2009,6 +2012,7 @@
 				5F5849A900000000000000A3 /* BruteForceWindowMatch.swift in Sources */,
 				5F5849A900000000000000B2 /* BruteForceWindowMatchTests.swift in Sources */,
 				5F5849B000000000000000B2 /* WindowEventReducerPhantomTests.swift in Sources */,
+				5F5849B000000000000000C2 /* WindowEventReducerSpaceTests.swift in Sources */,
 				5F5849B100000000000000B2 /* WindowEventReducerFocusTests.swift in Sources */,
 				5F5849B100000000000000C2 /* WindowEventReducerMinimizeTests.swift in Sources */,
 				5E5EA12E0000000000000003 /* KeyRepeatTimerTestable.swift in Sources */,
